@@ -2,6 +2,13 @@ var mongoose = require('mongoose');
 var readline = require('readline');
 
 var dbURI = process.env.MONGO_URI;
+var dbParams = {};
+if (process.env.MONGO_USER) {
+	dbParams.user = process.env.MONGO_USER;
+}
+if (process.env.MONGO_PASS) {
+	dbParams.pass = process.env.MONGO_PASS;
+}
 
 var gracefulShutdown = function (msg, callback) {
 	mongoose.connection.close(function () {
@@ -20,7 +27,7 @@ if (process.platform === 'win32') {
 	});
 }
 
-mongoose.connect(dbURI);
+mongoose.connect(dbURI, dbParams);
 
 mongoose.connection.on('connected', function () {
 	console.log('Mongoose connected to ' + dbURI);
